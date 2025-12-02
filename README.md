@@ -35,11 +35,11 @@ Flutter-приложение для работы с заметками, подк
 
  Шаги подключения Supabase
 
- 1. Создание проекта Supabase
+1. Создание проекта Supabase
 - Создал проект на [supabase.com](https://supabase.com)
 - Получил URL и ключ из настроек API
 
- 2. Конфигурация базы данных
+2. Конфигурация базы данных
 ```
 -- Создание таблицы notes
 CREATE TABLE notes (
@@ -51,7 +51,7 @@ CREATE TABLE notes (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
- 3. Настройка безопасности (RLS)
+3. Настройка безопасности (RLS)
 ```
 -- Включение Row Level Security
 ALTER TABLE notes ENABLE ROW LEVEL SECURITY;
@@ -73,7 +73,7 @@ CREATE POLICY "Update own notes" ON notes
 CREATE POLICY "Delete own notes" ON notes 
   FOR DELETE USING (auth.uid() = user_id);
 ```
- 4. Настройка Flutter приложения
+4. Настройка Flutter приложения
 
 Зависимости (pubspec.yaml)
 ```
@@ -82,7 +82,7 @@ dependencies:
     sdk: flutter
   supabase_flutter: ^2.0.0
 ```
- 5. Инициализация (main.dart)
+5. Инициализация (main.dart)
 
 ```
 const supabaseUrl = 'https://qfwnodkkolwncpbttcgu.supabase.co';
@@ -91,7 +91,7 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
 await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
 ```
 
- 6. Структура таблицы notes
+6. Структура таблицы notes
 ```
 
 | Поле | Тип | Описание |
@@ -104,7 +104,7 @@ await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
 | updated_at | TIMESTAMPTZ | Дата обновления |
 ```
 
- 7. Функциональность
+7. Функциональность
 
 - Аутентификация (регистрация/вход)
 - CRUD операции с заметками
@@ -112,7 +112,20 @@ await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
 - Row Level Security
 - Фильтрация по пользователю
 
- 8. Технологии
+8. RLS-политики
+
+- Включен Row Level Security для таблицы notes
+- Политики SELECT, INSERT, UPDATE, DELETE с проверкой user_id = auth.uid()
+- Каждый пользователь имеет доступ только к своим заметкам
+
+9. Безопасность в продакшене
+
+- Доступ только для аутентифицированных пользователей
+- Политики на основе auth.uid() для изоляции данных
+- Валидация входных данных
+- Ограничения на размер данных
+
+10. Технологии
 
 - Flutter
 - Supabase (PostgreSQL, Auth, Realtime)
